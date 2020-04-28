@@ -28,6 +28,9 @@ class SubPrueba:
         self.code = code
         self.mandatory = mandatory
         self.orden = orden
+
+        # transformador de puntuación directa a puntuación escalar
+        self.puntuacion_escalar = {}
     
     def load_from_dict(self, prueba, data):
         self.prueba = prueba
