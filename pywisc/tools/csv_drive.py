@@ -3,17 +3,23 @@ Nomenclador para hospitales públicos de gestión descentralizada de Argentina
 """
 import csv
 import json
+import logging
 import os
 import requests
 
 
-class Drive:
+logger = logging.getLogger(__name__)
 
-    def _init__(self, name, uid, gid, force_re_download=False):
+
+class DriveCSV:
+
+    def __init__(self, name, unique_id_column, uid, gid, force_re_download=False):
         """ starts with Unique Doc ID and page/tab ID """
+        self.name = name
+        self.unique_id_column = unique_id_column
         self.uid = uid
         self.gid = gid
-        self.url_csv = 'https://docs.google.com/spreadsheets/d/{uid}/export?format=csv&gid={gid}'
+        self.url_csv = f'https://docs.google.com/spreadsheets/d/{uid}/export?format=csv&gid={gid}'
         # download if not exists
         here = os.path.dirname(os.path.realpath(__file__))
         self.data_folder = os.path.join(here, 'tmpdata')
@@ -23,6 +29,7 @@ class Drive:
         self.read_csv()
     
     def download(self):
+        logger.info(f'Downloading from {self.url_csv}')
         req = requests.get(self.url_csv)
         if not os.path.isdir(self.data_folder):
             os.mkdir(self.data_folder)
@@ -36,15 +43,14 @@ class Drive:
         f = open(self.local_csv, 'r')
         reader = csv.DictReader(f)
         
-        c = 0  # codigo unico (no hay otro)
-        
         for row in reader:
-            # fix all shit
+            logger.info(f'Reading row {row}')
+            
+            uid = row[self.unique_id_column]
             for k, v in row.items():
                 row[k] = v.strip()
 
-            tree[c] = row
-            c += 1
+            tree[uid] = row
 
         f.close()
 
