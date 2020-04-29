@@ -14,4 +14,7 @@ pip install pywisc
 ```
 
 ## Tests
+
+```
 python -m pytest -s
+```
