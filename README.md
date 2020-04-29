@@ -2,8 +2,8 @@
 
 # Py Wisc
 
-Calculos para WISC en diferentes versiones y diferentes paises
-Status: En desarrollo. No funciona
+Calculos para WISC en diferentes versiones y diferentes paises.  
+**Status**: En desarrollo. No funciona todavía.
 
 ## Install
 
