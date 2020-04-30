@@ -39,18 +39,19 @@ class DriveCSV:
 
     def read_csv(self):
         # read CSV and transfor to a useful JSON
-        tree = {}   # results
+        tree = []   # results
         f = open(self.local_csv, 'r')
         reader = csv.DictReader(f)
         
         for row in reader:
             logger.info(f'Reading row {row}')
             
-            uid = row[self.unique_id_column]
+            # uid = row[self.unique_id_column]
+            new_row = {}
             for k, v in row.items():
-                row[k] = v.strip()
+                new_row[k] = v.strip()
 
-            tree[uid] = row
+            tree.append(new_row)
 
         f.close()
 

@@ -19,7 +19,11 @@ setuptools.setup(
      ],
      include_package_data=True,  
      packages=['pywisc'],  # setuptools.find_packages(),
-     
+     entry_points = {
+        'console_scripts': [
+            'wisc=pywisc.command_line:main'
+            ],
+     },
      classifiers=[
          'Programming Language :: Python :: 3',
          'Programming Language :: Python :: 3.6',

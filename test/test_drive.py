@@ -1,7 +1,7 @@
 from pywisc.tools.csv_drive import DriveCSV
 
 
-def test_drive():
+def test_ver4_es_ar_6_0_drive():
     uid = '1qM_iwvnCLTlrudcaWr_scbrsYqy6g6GCyyYXImpO5uo'
     gid = '0'
     d = DriveCSV(name='wisc-4-es-ar-6-0-6-3',

@@ -1,4 +1,4 @@
-from pywisc.wisc_base import Wisc
+from pywisc.wisc import Wisc
 
 
 def test_01():

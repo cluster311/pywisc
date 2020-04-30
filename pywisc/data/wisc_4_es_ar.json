@@ -2,6 +2,25 @@
     "version": 4,
     "language": "es",
     "country": "ar",
+    "required_to_start": [
+        {
+            "code": "born_date",
+            "text": "Fecha de nacimiento",
+            "data_type": "date",
+            "formats": ["%Y-%m-%d", "%m/%d/%Y"],
+            "formats_txt_to_user": "Formatos permitidos: AAAA-MM-DD o DD/MM/AAAA. Por ejemplo 2020-12-01 o 01/12/2020",
+            "default": null
+        },
+        {
+            "code": "test_date",
+            "text": "Fecha de evaluación",
+            "data_type": "date",
+            "formats": ["%Y-%m-%d", "%m/%d/%Y"],
+            "formats_txt_to_user": "Formatos permitidos: AAAA-MM-DD o DD/MM/AAAA. Por ejemplo 2020-12-01 o 01/12/2020",
+            "default": "today",
+            "default_to_user": "Dejar en blanco para asignar el día de hoy"
+        }
+    ],
     "tests": [
         {
         "name": "Comprension verbal",

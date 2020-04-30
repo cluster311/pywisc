@@ -1,6 +1,6 @@
 import json
 import logging
-from pywisc.prueba_base import Prueba
+from pywisc.prueba import Prueba
 
 
 logger = logging.getLogger(__name__)
@@ -28,6 +28,9 @@ class Wisc:
         self.validate()
         self.pruebas = []
         self.load_pruebas(data=self.data)
+
+        # required data to start
+        self.required_to_start = self.data['required_to_start']
 
     def load_from_file(self, definition_file_path):
         f = open(definition_file_path, 'r')
@@ -62,4 +65,4 @@ class Wisc:
     
     def __str__(self):
         tot_pruebas = len(self.pruebas)
-        return f'WISC {self.version} ({self.language}-{self.country}). Pruebas: {tot_pruebas}. Sub pruebas: '
+        return f'WISC {self.version} ({self.language}-{self.country}). Pruebas: {tot_pruebas}.'
