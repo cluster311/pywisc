@@ -43,7 +43,7 @@ class TablaEscalar:
                 if self.meses <= esc['to_months']:
                     info = esc
         if info is None:
-            raise ValueError(f'No se encontro la tabla de escalares para un paciente de {meses} meses')
+            raise ValueError(f'No se encontro la tabla de escalares para un paciente de {self.meses} meses')
         
         code = info['code']
         uid = info['drive_uid']

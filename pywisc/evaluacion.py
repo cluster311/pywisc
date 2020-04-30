@@ -20,6 +20,8 @@ class Evaluacion:
 
         # todos los datos cargados de este proceso
         self.data = {}
+        # tabla final usada segun el test y la edad
+        self.tabla_escalar = None
 
     def calculate_age(self):
         born_date = self.data['born_date']
@@ -33,14 +35,43 @@ class Evaluacion:
         self.data['full_months'] = full_months
         self.data['years'] = years
         self.data['months'] = months        
+
+        # cargar la tabla de escalares para esta edad
+        self.tabla_escalar = TablaEscalar(wisc=self.wisc, meses=self.data['full_months'])
     
-    def calculate(self):
-        
+    def calculate_escalar(self, code, directa):
+        """ calcular un escalar para un código especifico con una puntuacion directa dada """
+        escalar = None
+        for row in self.tabla_escalar.data:
+            if row[code] != '':
+                val = int(row[code])
+                logger.info(f'{val} vs {directa}')
+                if val >= directa:
+                    escalar = int(row['Escalar'])
+                    break
+        if escalar is None:
+            raise ValueError(f'No se encontró el escalar para la directa={directa} para {code}')
+    
+        return escalar
 
+    def calculate_ci(self, directas):
+        """ Calcular total de CI en base a las escalares
+            Param:
+                directas: dict {'<str>code1', '<int>directa1', '<str>code2', '<int>directa2', ... }]
+        """
+        print(f'Calc over {directas}')
+        ci = 0
+        for code, directa in directas.items():
+            ci += self.calculate_escalar(code=code, directa=directa)
 
-    def start_as_terminal(self):
-        """ ask required data to start """
+        return ci
+
+    def ask_requirements_as_terminal(self):
+        """ cargar los datos requeridos y calcular los meses """
         rts = self.wisc.required_to_start
+        
+        # retorno a validar
+        ret = {}
         
         for req in rts:
             text = req['text']
@@ -71,13 +102,39 @@ class Evaluacion:
                 if val is None:
                     raise ValueError('No coincide con ninguno de los formatos esperados')
         
+                ret[req['code']] = s
+
+        return ret
+
+    def validate_reqs(self, reqs):
+        """ ya tome los valores requeridos, ahora los cargo a self.data validados """
+        rts = self.wisc.required_to_start
+        for req in rts:
+            if req['data_type'] == 'date':
+                val = None
+                for fmt in req['formats']:
+                    try:
+                        val = datetime.strptime(reqs[req['code']], fmt)
+                    except ValueError:
+                        pass
+                    if val is not None:
+                        break
+
+                if val is None:
+                    raise ValueError('No coincide con ninguno de los formatos esperados')
+        
                 self.data[req['code']] = val
 
+
+    def ask_directas_as_terminal(self):
+        """ ask required data to start """
+        
+        reqs = self.ask_requirements_as_terminal()
+        self.validate_reqs(reqs=reqs)
         self.calculate_age()
-        te = TablaEscalar(wisc=self.wisc, meses=self.data['full_months'])
 
         # tomar las puntuaciones directas y trasformarlas en escalares
-        self.data['escalares'] = {}
+        directas = {}
         for prueba in self.wisc.pruebas:
             # solo espero un numero entero por cada subtest
             for subprueba in prueba.subpruebas:
@@ -85,36 +142,16 @@ class Evaluacion:
                 code = '{}-{}'.format(prueba.code, subprueba.code)
                 
                 if not subprueba.mandatory:
-                    print(f'Ignorando la prueba no obligatoria {name}')
+                    logger.info(f'Ignorando la prueba no obligatoria {name}')
                     continue
 
                 ask = f'{name} ({code}):'
-                directa = int(input(ask))
-                escalar = None
-                for row in te.data:
-                    # TODO deben estar ordenados
-                    if row[subprueba.code] != '':
-                        val = int(row[subprueba.code])
-                        print(f'{val} vs {directa}')
-                        if val >= directa:
-                            escalar = int(row['Escalar'])
-                            break
-                if escalar is None:
-                    raise ValueError(f'No se encontró el escalar para la directa={directa} para {code}')
-                
-                d = {'directa': directa, 'escalar': escalar}
-                self.data['escalares'][code] = d
-                print(f'{code}: {d}')
-        
+                directa = int(input(ask))                
+                directas[subprueba.code] = directa
+
         # sumar escalares
-        ci = 0
-        escalares = []
-        for code, esc in self.data['escalares'].items():
-            ci += esc['escalar']
-            directa, escalar = esc['directa'], esc['escalar']
-            escalares.append(f'{code}= {directa} {escalar}')
+        ci = self.calculate_ci(directas=directas)
+        
         print(f'CI calculado: {ci}')
-        valores = ', '.join(escalares)
-        print(f'\t valores: {valores}')
         
         # TODO test: con 10 en todas las directas el CI es 89

@@ -9,5 +9,6 @@ def test_ver4_es_ar_6_0_drive():
                  uid=uid, gid=gid,
                  force_re_download=True)
     data = d.tree
-
-    assert data['7']['Cl'] == '21'
+    for d in data:
+        if d['Cl'] == 21:
+            assert d['Escalar'] == 7

@@ -9,4 +9,4 @@ def main():
     df = 'pywisc/data/wisc_4_es_ar.json'
     w = Wisc(definition_data=df)
     e = Evaluacion(wisc=w)
-    e.start_as_terminal()
+    e.ask_directas_as_terminal()
