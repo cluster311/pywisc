@@ -1,5 +1,7 @@
 import json
 import logging
+import os
+
 from datetime import datetime
 from pywisc.tools.csv_drive import DriveCSV
 
@@ -27,7 +29,8 @@ class TablaEscalar:
         """ cargar la info de las tablas escalares disponibles """
         ver = self.wisc.version
         lang = self.wisc.language
-        df = f'pywisc/data/data_{ver}_{lang}.json'
+        here = os.path.dirname(os.path.realpath(__file__))
+        df = os.path.join(here, 'data', f'data_{ver}_{lang}.json')
         f = open(df, 'r')
         infos = json.loads(f.read())
         f.close()
