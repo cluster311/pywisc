@@ -1,1 +1,2 @@
 include pywisc/data/*
+include pywisc/tools/tmpdata/*
