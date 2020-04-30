@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
      name='pywisc',
-     version='0.04',
+     version='0.05',
      license='MIT',
      author="Andres Vazquez",
      author_email="andres@data99.com.ar",
@@ -16,6 +16,7 @@ setuptools.setup(
      long_description_content_type="text/markdown",
      url="https://github.com/cluster311/pywisc",
      install_requires=[
+         'requests>=2.23.0'
      ],
      include_package_data=True,  
      packages=['pywisc'],  # setuptools.find_packages(),
