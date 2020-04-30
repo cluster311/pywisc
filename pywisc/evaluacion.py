@@ -2,6 +2,7 @@ import json
 import logging
 from datetime import datetime
 from pywisc.tools.csv_drive import DriveCSV
+from pywisc.escalares import TablaEscalar
 
 
 logger = logging.getLogger(__name__)
@@ -17,14 +18,9 @@ class Evaluacion:
         """
         self.wisc = wisc
 
-        # todos los datos cargados
+        # todos los datos cargados de este proceso
         self.data = {}
 
-        # indice de datos para transformacion a escalares
-        self.escalares = self.load_escalares()
-        # elegir la tabla solo cuando sepa cuantos meses tiene
-        self.tabla_escalar = {}
-    
     def calculate_age(self):
         born_date = self.data['born_date']
         test_date = self.data['test_date']
@@ -32,33 +28,16 @@ class Evaluacion:
         full_months = (test_date.year - born_date.year) * 12 + test_date.month - born_date.month
         years = full_months // 12
         months = full_months % 12
-        print(f'Total meses: {full_months}')
-        print(f'o {years} años y and {months}')
+        logger.info(f'Total meses: {full_months}')
+        logger.info(f'o {years} años y and {months}')
         self.data['full_months'] = full_months
         self.data['years'] = years
-        self.data['months'] = months
-
-    def load_escalares(self):
-        """ cargar los datos de paso de directa a escalar correspondiente a la edad """
-        ver = self.wisc.version
-        lang = self.wisc.language
-        df = f'pywisc/data/data_{ver}_{lang}.json'
-        f = open(df, 'r')
-        data = json.loads(f.read())
-        f.close()
-        return data
+        self.data['months'] = months        
     
-    def get_escalar_table(self):
-        """ encontrar cual de todas las tablas de escalares corresponde con la edad del paciente """
-
-        meses = self.data['full_months']
-        for esc in self.escalares:
-            if meses >= esc['from_months']:
-                if meses <= esc['to_months']:
-                    return esc
-        raise ValueError(f'No se encontro la tabla de escalares para un paciente de {meses} meses')
+    def calculate(self):
         
-    
+
+
     def start_as_terminal(self):
         """ ask required data to start """
         rts = self.wisc.required_to_start
@@ -95,16 +74,7 @@ class Evaluacion:
                 self.data[req['code']] = val
 
         self.calculate_age()
-        self.tabla_escalar = self.get_escalar_table()
-        code = self.tabla_escalar['code']
-        uid = self.tabla_escalar['drive_uid']
-        gid = self.tabla_escalar['drive_gid']
-        drive_name = f'wisc-{self.wisc.version}-{self.wisc.language}-{self.wisc.country}-{code}'
-        d = DriveCSV(name=drive_name,
-                 unique_id_column='Escalar',
-                 uid=uid, gid=gid)
-        escalares = d.tree
-        print(escalares)
+        te = TablaEscalar(wisc=self.wisc, meses=self.data['full_months'])
 
         # tomar las puntuaciones directas y trasformarlas en escalares
         self.data['escalares'] = {}
@@ -121,7 +91,7 @@ class Evaluacion:
                 ask = f'{name} ({code}):'
                 directa = int(input(ask))
                 escalar = None
-                for row in escalares:
+                for row in te.data:
                     # TODO deben estar ordenados
                     if row[subprueba.code] != '':
                         val = int(row[subprueba.code])
@@ -138,8 +108,13 @@ class Evaluacion:
         
         # sumar escalares
         ci = 0
+        escalares = []
         for code, esc in self.data['escalares'].items():
             ci += esc['escalar']
-        print(f'CI: {ci}')
+            directa, escalar = esc['directa'], esc['escalar']
+            escalares.append(f'{code}= {directa} {escalar}')
+        print(f'CI calculado: {ci}')
+        valores = ', '.join(escalares)
+        print(f'\t valores: {valores}')
         
         # TODO test: con 10 en todas las directas el CI es 89
