@@ -13,7 +13,6 @@ Publicado en [Pypi](https://pypi.org/project/pywisc/)
 pip install pywisc
 ```
 
-
 ## Comandos
 
 Esta aplicación se puede usar desde la línea de comandos
@@ -51,7 +50,6 @@ directas_por_subtest =  {'S': 10, 'V': 10, 'C': 10, 'CC': 10,
                          'Co': 10, 'M': 10, 'RD': 10, 'LN': 10,
                          'Cl': 10, 'BS': 10}
 
-# fix path
 w = Wisc(wisc_version=4, language='es', country='ar')
 e = Evaluacion(wisc=w)
 reqs = {'born_date': '2014-03-01', 'test_date': '2020-04-29'}
