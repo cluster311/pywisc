@@ -46,6 +46,10 @@ CI calculado: 89
 ## En Python
 
 ```python
+from pywisc.wisc import Wisc
+from pywisc.evaluacion import Evaluacion
+
+
 directas_por_subtest =  {'S': 10, 'V': 10, 'C': 10, 'CC': 10,
                          'Co': 10, 'M': 10, 'RD': 10, 'LN': 10,
                          'Cl': 10, 'BS': 10}
