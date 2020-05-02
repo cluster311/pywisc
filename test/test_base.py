@@ -2,6 +2,5 @@ from pywisc.wisc import Wisc
 
 
 def test_01():
-    df = 'pywisc/data/wisc_4_es_ar.json'
-    w = Wisc(definition_data=df)
+    w = Wisc(wisc_version=4, language='es', country='ar')
     assert w.is_valid

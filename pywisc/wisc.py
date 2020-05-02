@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 from pywisc.prueba import Prueba
 
 
@@ -11,16 +12,22 @@ VALID_COUNTRIES = ['ar']
 
 class Wisc:
     """ a WISC test """
-    def __init__(self, definition_data):
-        """ start from a  
+    def __init__(self, wisc_version=4, language='es', country='ar'):
+        """ start a wisc test instance
             Params:
-                definition_data: path to a file or dict """
-        
+                wisc_version: 4 or versiones futuras
+                language: 'es'
+                country: 'ar' """
+        assert wisc_version in VALID_VERSIONS
+        assert language in VALID_LANGUAGES
+        assert country in VALID_COUNTRIES
+        here = os.path.dirname(os.path.realpath(__file__))
+        json_wisc = f'wisc_{wisc_version}_{language}_{country}.json'
+        definition_data = os.path.join(here, 'data', json_wisc)
         if type(definition_data) == dict:
             self.data = definition_data
         elif type(definition_data) == str:
             self.data = self.load_from_file(definition_file_path=definition_data)
-        
         self.language = self.data['language']
         self.version = self.data['version']
         self.country = self.data['country']
