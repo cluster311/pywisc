@@ -86,3 +86,26 @@ def test_evaluacion_14_10():
     assert ci == 159
 
 
+# ##################################################
+# 14 años y 4-7 meses
+# ##################################################
+
+
+def test_evaluacion_14_4():
+    data =  {'CC': 26, 'S': 17,'RD': 11, 'Co': 14, 'Cl': 37, 'V': 30, 'LN': 14, 'M': 17, 'C': 20, 'BS': 10}
+    ci = evaluate(directas=data, born_date='2006-01-01', test_date='2020-05-13')
+    assert ci == 46
+
+
+def test_evaluacion_14_5():
+    data =  {'CC': 68, 'S': 27,'RD': 17, 'Co': 20, 'Cl': 57, 'V': 47, 'LN': 19, 'M': 25, 'C': 31, 'BS': 31}
+    ci = evaluate(directas=data, born_date='2005-12-01', test_date='2020-05-13')
+    assert ci == 112
+
+
+def test_evaluacion_14_6():
+    data =  {'CC': 60, 'S': 44,'RD': 22, 'Co': 24, 'Cl': 77, 'V': 58, 'LN': 23, 'M': 30, 'C': 38, 'BS': 40}
+    ci = evaluate(directas=data, born_date='2005-11-01', test_date='2020-05-13')
+    assert ci == 154
+
+
