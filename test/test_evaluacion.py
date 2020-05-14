@@ -53,11 +53,36 @@ def test_evaluacion_15_0_A():
 
 def test_evaluacion_15_1_B():
     data =  {'CC': 47, 'S': 27,'RD': 17, 'Co': 20, 'Cl': 63, 'V': 47, 'LN': 19, 'M': 25, 'C': 31, 'BS': 31}
-    ci = evaluate(directas=data, born_date='2005-04-01', test_date='2020-05-13')
+    ci = evaluate(directas=data, born_date='2005-03-01', test_date='2020-05-13')
     assert ci == 100
 
 
 def test_evaluacion_15_2_C():
     data =  {'CC': 63, 'S': 39,'RD': 25, 'Co': 24, 'Cl': 79, 'V': 59, 'LN': 24, 'M': 31, 'C': 38, 'BS': 42}
-    ci = evaluate(directas=data, born_date='2005-03-01', test_date='2020-05-13')
+    ci = evaluate(directas=data, born_date='2005-02-01', test_date='2020-05-13')
     assert ci == 150
+
+
+# ##################################################
+# 14 años y 8-11 meses
+# ##################################################
+
+
+def test_evaluacion_14_8():
+    data =  {'CC': 28, 'S': 17,'RD': 11, 'Co': 14, 'Cl': 40, 'V': 33, 'LN': 14, 'M': 16, 'C': 20, 'BS': 20}
+    ci = evaluate(directas=data, born_date='2005-09-01', test_date='2020-05-13')
+    assert ci == 50
+
+
+def test_evaluacion_14_9():
+    data =  {'CC': 47, 'S': 27,'RD': 17, 'Co': 20, 'Cl': 61, 'V': 48, 'LN': 19, 'M': 25, 'C': 31, 'BS': 31}
+    ci = evaluate(directas=data, born_date='2005-08-01', test_date='2020-05-13')
+    assert ci == 101
+
+
+def test_evaluacion_14_10():
+    data =  {'CC': 63, 'S': 40,'RD': 23, 'Co': 25, 'Cl': 80, 'V': 60, 'LN': 24, 'M': 31, 'C': 39, 'BS': 42}
+    ci = evaluate(directas=data, born_date='2005-07-01', test_date='2020-05-13')
+    assert ci == 159
+
+
