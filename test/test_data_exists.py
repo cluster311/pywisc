@@ -41,3 +41,45 @@ def test_all_days():
                 print('{} {}>={}'.format(born_date, new_ci, last_ci))
             assert new_ci >= last_ci
             last_ci = new_ci
+
+
+def test_all_columns():
+    """ probar que todas las planillas tienen columnas 
+        con valores que crecen siempre
+    """
+
+    w = Wisc(wisc_version=4, language='es', country='ar')
+
+    today = datetime.today()
+    # TODO cargar las planillas de 16 años e incrementar esto
+    end = 15 * 365 - 1
+    start = 6 * 365
+
+    # simulamos que los tests se hacen hoy
+    test_date = today.strftime('%Y-%m-%d')
+
+    for days_back in range(start, end, 90):
+        day = today - timedelta(days=days_back)
+        
+        born_date = day.strftime('%Y-%m-%d')
+        e = Evaluacion(wisc=w)
+        reqs = {'born_date': born_date, 'test_date': test_date}
+        e.validate_reqs(reqs=reqs)
+        # luego de calcular la edad se conecta con la tabla de equivalencias con los escalares
+        e.calculate_age()
+        
+        data = e.tabla_escalar.data
+        info = e.tabla_escalar.table_info
+
+        keys =  ['S', 'V', 'C', 'CC', 'Co', 'M', 'RD', 'LN', 'Cl', 'BS']
+        
+        for k in keys:
+            last_val = 0
+            c = 0
+            for row in data:
+                c += 1
+                print(f'Info: {info}. Row: {k}-{c} {row}')
+                if row[k] != '':
+                    new_val = int(row[k])
+                    assert new_val >= last_val
+                    last_val = new_val

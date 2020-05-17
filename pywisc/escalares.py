@@ -23,6 +23,7 @@ class TablaEscalar:
 
         # datos de la tabla de datos para transoformar directa en escalar
         self.data = None
+        self.table_info = None  # info general de la tabla cargada (meses, pais, version, etc)
         self.load_data()
     
     def load_escalares(self):
@@ -48,6 +49,7 @@ class TablaEscalar:
         if info is None:
             raise ValueError(f'No se encontro la tabla de escalares para un paciente de {self.meses} meses')
         
+        self.table_info = info
         code = info['code']
         uid = info['drive_uid']
         gid = info['drive_gid']
