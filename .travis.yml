@@ -12,7 +12,7 @@ before_script:
   - flake8 pywisc --count --select=E9,F63,F7,F82 --show-source --statistics
   - flake8 pywisc --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 script:
-  - python -m pytest -s
+  - python -m pytest
 deploy:
     provider: pypi
     username: "$PYPI_USER"
