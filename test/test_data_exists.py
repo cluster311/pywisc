@@ -29,12 +29,15 @@ def test_all_days():
         e.validate_reqs(reqs=reqs)
         e.calculate_age()
         
-        print('{} Y{} m{} M{}'.format(born_date, e.data['years'], e.data['months'], e.data['full_months']))
+        if days_back % 100 == 0:  # CI platform limit max logs length
+            print('{} Y{} m{} M{}'.format(born_date, e.data['years'], e.data['months'], e.data['full_months']))
         last_ci = 0
         for v in range(5, 26):  # 26 parece ser el menor de los máximos puntajes
+            
             directas =  {'S': v, 'V': v, 'C': v, 'CC': v, 'Co': v, 'M': v, 'RD': v, 'LN': v, 'Cl': v, 'BS': v}
 
             new_ci = e.calculate_ci(directas=directas)
-            print('{} {}>={}'.format(born_date, new_ci, last_ci))
+            if days_back % 100 == 0:  # CI platform limit max logs length
+                print('{} {}>={}'.format(born_date, new_ci, last_ci))
             assert new_ci >= last_ci
             last_ci = new_ci
