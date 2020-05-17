@@ -1,6 +1,7 @@
 from pywisc.wisc import Wisc
 from pywisc.evaluacion import Evaluacion
 
+
 def evaluate(directas, born_date, test_date, wisc_version=4, language='es', country='ar'):
     """ evalua wisc, devuleve el CI """
     w = Wisc(wisc_version=wisc_version,
